@@ -138,7 +138,7 @@ function clearExpiredCache() {
 // 获取天气数据
 async function fetchWeather(city) {
     // 检查API密钥
-    if (API_KEY === 'YOUR_API_KEY_HERE') {
+    if (API_KEY === 'https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m') {
         showError('请先在 app.js 中配置您的 API 密钥！访问 https://www.weatherapi.com/signup.aspx 免费获取。');
         return null;
     }
