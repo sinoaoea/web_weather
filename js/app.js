@@ -1,8 +1,7 @@
 // ==================== 配置 ====================
-// 请在这里填入你的 WeatherAPI.com API密钥
-// 免费注册地址：https://www.weatherapi.com/signup.aspx
-const API_KEY =;
-const API_BASE_URL = 'https://api.weatherapi.com/v1';
+// API 代理接口（通过 Cloudflare Pages Function 转发请求，隐藏 API Key）
+// 生产环境使用相对路径，开发环境可改为完整 URL
+const API_PROXY = '/api/weather';
 
 // 缓存配置
 const CACHE_PREFIX = 'weather_cache_';
@@ -137,12 +136,6 @@ function clearExpiredCache() {
 
 // 获取天气数据
 async function fetchWeather(city) {
-    // 检查API密钥
-    if (API_KEY === 'YOUR_API_KEY_HERE') {
-        showError('请先在 app.js 中配置您的 API 密钥！访问 https://www.weatherapi.com/signup.aspx 免费获取。');
-        return null;
-    }
-
     // 先尝试从缓存获取数据
     const cachedData = getFromCache(city);
     if (cachedData) {
@@ -154,14 +147,17 @@ async function fetchWeather(city) {
 
     try {
         const response = await fetch(
-            `${API_BASE_URL}/forecast.json?key=${API_KEY}&q=${encodeURIComponent(city)}&days=7&aqi=no&lang=zh`
+            `${API_PROXY}?q=${encodeURIComponent(city)}`
         );
 
         if (!response.ok) {
-            if (response.status === 400) {
+            const errorData = await response.json().catch(() => ({}));
+            if (response.status === 400 || errorData.error?.code === 1006) {
                 throw new Error('未找到该城市，请检查城市名称是否正确');
-            } else if (response.status === 401) {
-                throw new Error('API密钥无效，请检查配置');
+            } else if (response.status === 401 || response.status === 403) {
+                throw new Error('API密钥无效，请检查Cloudflare环境变量配置');
+            } else if (response.status === 500) {
+                throw new Error(errorData.error || '服务器配置错误');
             } else {
                 throw new Error(`请求失败: ${response.status}`);
             }
