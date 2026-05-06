@@ -238,41 +238,89 @@ function displayForecast(data) {
     forecast.style.display = 'block';
 }
 
-// ==================== 酒店推荐 ====================
+// ==================== 出行服务（酒店/机票/火车票） ====================
 
-// 显示酒店推荐
+// 携程服务固定链接
+const CTRIP_FLIGHTS_URL = `https://flights.ctrip.com/fuzzysearch/search?${CTRIP_AFFILIATE}`;
+const CTRIP_TRAINS_URL = `https://trains.ctrip.com/?${CTRIP_AFFILIATE}`;
+
+// 显示出行服务卡片
 function displayHotels(cityName) {
     const cityData = findHotelData(cityName);
 
-    if (!cityData) {
-        hotelSection.style.display = 'none';
-        return;
-    }
-
+    // 即使没匹配到酒店，也显示机票和火车票（不显示酒店卡片就行）
     hotelContainer.innerHTML = '';
 
-    cityData.hotels.forEach(hotel => {
-        const card = document.createElement('a');
-        card.href = cityData.url;
-        card.target = '_blank';
-        card.rel = 'noopener';
-        card.className = 'hotel-card';
+    // ---- 卡片 1：酒店推荐（城市相关） ----
+    const hotelCard = document.createElement('a');
+    hotelCard.target = '_blank';
+    hotelCard.rel = 'noopener';
+    hotelCard.className = 'service-card';
 
-        card.innerHTML = `
-            <div class="hotel-card-content">
-                <div class="hotel-name">${hotel.name}</div>
-                <div class="hotel-desc">${hotel.desc}</div>
+    if (cityData) {
+        hotelCard.href = `${cityData.url}?${CTRIP_AFFILIATE}`;
+
+        let hotelListHtml = '';
+        cityData.hotels.forEach(h => {
+            hotelListHtml += `<div class="service-hotel-item">
+                <span class="service-hotel-dot"></span>
+                ${h.name}
+            </div>`;
+        });
+
+        hotelCard.innerHTML = `
+            <div class="service-card-header">
+                <span class="service-icon icon-hotel"></span>
+                <span class="service-title">酒店推荐</span>
             </div>
-            <div class="hotel-action">
-                <span>查看价格</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M7 17l9.2-9.2M17 17V7H7"/>
-                </svg>
-            </div>
+            <div class="service-hotel-list">${hotelListHtml}</div>
+            <div class="service-card-footer">查看更多酒店 →</div>
         `;
+    } else {
+        // 城市不在酒店列表里，显示通用入口
+        hotelCard.href = `https://hotels.ctrip.com/?${CTRIP_AFFILIATE}`;
+        hotelCard.innerHTML = `
+            <div class="service-card-header">
+                <span class="service-icon icon-hotel"></span>
+                <span class="service-title">酒店预订</span>
+            </div>
+            <div class="service-desc">携程酒店覆盖全球 · 低价保证</div>
+            <div class="service-card-footer">立即预订 →</div>
+        `;
+    }
+    hotelContainer.appendChild(hotelCard);
 
-        hotelContainer.appendChild(card);
-    });
+    // ---- 卡片 2：特价机票 ----
+    const flightCard = document.createElement('a');
+    flightCard.href = CTRIP_FLIGHTS_URL;
+    flightCard.target = '_blank';
+    flightCard.rel = 'noopener';
+    flightCard.className = 'service-card';
+    flightCard.innerHTML = `
+        <div class="service-card-header">
+            <span class="service-icon icon-flight"></span>
+            <span class="service-title">特价机票</span>
+        </div>
+        <div class="service-desc">查询全球航班 · 特价机票随时购</div>
+        <div class="service-card-footer">搜索机票 →</div>
+    `;
+    hotelContainer.appendChild(flightCard);
+
+    // ---- 卡片 3：火车票预订 ----
+    const trainCard = document.createElement('a');
+    trainCard.href = CTRIP_TRAINS_URL;
+    trainCard.target = '_blank';
+    trainCard.rel = 'noopener';
+    trainCard.className = 'service-card';
+    trainCard.innerHTML = `
+        <div class="service-card-header">
+            <span class="service-icon icon-train"></span>
+            <span class="service-title">火车票预订</span>
+        </div>
+        <div class="service-desc">在线预订火车票 · 高铁动车一站式</div>
+        <div class="service-card-footer">立即预订 →</div>
+    `;
+    hotelContainer.appendChild(trainCard);
 
     hotelSection.style.display = 'block';
 }

@@ -3,8 +3,10 @@
  *
  * 数据来源：携程旅行网 https://hotels.ctrip.com
  * 每个城市推荐 3 家知名酒店，点击跳转到携程该城市酒店列表页。
- * 如需接入携程联盟返佣，可在 URL 后追加 sid 和 allianceid 参数。
  */
+
+// 携程联盟追踪参数（在跳转 URL 后自动追加）
+const CTRIP_AFFILIATE = 'sid=1847052&allianceid=1057242&ouid=kfptvxtool';
 
 const HOTEL_DATA = {
     // === 国内城市 ===
