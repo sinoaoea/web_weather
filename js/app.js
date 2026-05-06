@@ -189,6 +189,7 @@ function displayCurrentWeather(data) {
 
     // 天气图标和温度
     document.getElementById('weatherIcon').src = `https:${current.condition.icon}`;
+    document.getElementById('weatherIcon').alt = current.condition.text;
     document.getElementById('temperature').textContent = `${Math.round(current.temp_c)}°C`;
     document.getElementById('weatherDesc').textContent = current.condition.text;
 

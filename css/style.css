@@ -59,6 +59,20 @@ header h1 {
     font-weight: 600;
 }
 
+.instructions h2 {
+    color: #1c1e21;
+    margin-bottom: 10px;
+    font-size: 1.25em;
+    font-weight: 700;
+}
+
+.instructions p {
+    line-height: 1.7;
+    color: #444;
+    font-size: 0.93em;
+    margin-bottom: 12px;
+}
+
 .instructions ul {
     list-style-position: inside;
     line-height: 1.6;
