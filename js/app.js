@@ -13,6 +13,8 @@ const loading = document.getElementById('loading');
 const error = document.getElementById('error');
 const currentWeather = document.getElementById('currentWeather');
 const forecast = document.getElementById('forecast');
+const hotelSection = document.getElementById('hotelSection');
+const hotelContainer = document.getElementById('hotelContainer');
 
 // ==================== 工具函数 ====================
 
@@ -22,6 +24,7 @@ function showLoading() {
     error.style.display = 'none';
     currentWeather.style.display = 'none';
     forecast.style.display = 'none';
+    hotelSection.style.display = 'none';
 }
 
 // 隐藏加载状态
@@ -235,6 +238,45 @@ function displayForecast(data) {
     forecast.style.display = 'block';
 }
 
+// ==================== 酒店推荐 ====================
+
+// 显示酒店推荐
+function displayHotels(cityName) {
+    const cityData = findHotelData(cityName);
+
+    if (!cityData) {
+        hotelSection.style.display = 'none';
+        return;
+    }
+
+    hotelContainer.innerHTML = '';
+
+    cityData.hotels.forEach(hotel => {
+        const card = document.createElement('a');
+        card.href = cityData.url;
+        card.target = '_blank';
+        card.rel = 'noopener';
+        card.className = 'hotel-card';
+
+        card.innerHTML = `
+            <div class="hotel-card-content">
+                <div class="hotel-name">${hotel.name}</div>
+                <div class="hotel-desc">${hotel.desc}</div>
+            </div>
+            <div class="hotel-action">
+                <span>查看价格</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                </svg>
+            </div>
+        `;
+
+        hotelContainer.appendChild(card);
+    });
+
+    hotelSection.style.display = 'block';
+}
+
 // ==================== 搜索功能 ====================
 
 // 搜索天气
@@ -255,6 +297,7 @@ async function searchWeather() {
             hideLoading();
             displayCurrentWeather(data);
             displayForecast(data);
+            displayHotels(city);
         }
     } catch (err) {
         showError(err.message);
@@ -278,6 +321,7 @@ async function autoLocationWeather() {
             hideLoading();
             displayCurrentWeather(data);
             displayForecast(data);
+            displayHotels(data.location.name);
             // 标记已访问
             sessionStorage.setItem('weatherVisited', 'true');
         }
