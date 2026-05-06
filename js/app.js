@@ -1,7 +1,7 @@
 // ==================== 配置 ====================
 // 请在这里填入你的 WeatherAPI.com API密钥
 // 免费注册地址：https://www.weatherapi.com/signup.aspx
-const API_KEY = 'xxxxxxxxxxxxxxxxxxxxxxx';
+const API_KEY = 'e407a812830a4e7d83d111337260605';
 const API_BASE_URL = 'https://api.weatherapi.com/v1';
 
 // 缓存配置
@@ -138,7 +138,7 @@ function clearExpiredCache() {
 // 获取天气数据
 async function fetchWeather(city) {
     // 检查API密钥
-    if (API_KEY === 'b8939d1b66c84e62a02111009260605') {
+    if (API_KEY === 'YOUR_API_KEY_HERE') {
         showError('请先在 app.js 中配置您的 API 密钥！访问 https://www.weatherapi.com/signup.aspx 免费获取。');
         return null;
     }
