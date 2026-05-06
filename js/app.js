@@ -1,7 +1,7 @@
 // ==================== 配置 ====================
 // 请在这里填入你的 WeatherAPI.com API密钥
 // 免费注册地址：https://www.weatherapi.com/signup.aspx
-const API_KEY = 'xxxxxxxxxxxxxxxxxxxxxxx';
+const API_KEY = ;
 const API_BASE_URL = 'https://api.weatherapi.com/v1';
 
 // 缓存配置
